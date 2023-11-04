@@ -1,0 +1,24 @@
+.delete-button {
+  background-color: rgb(129, 25, 25);
+  color: rgba(237, 221, 221, 0.989);
+  border: none;
+  border-radius: 50%;
+  padding: 6px 9px 4px 8px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left:  15px;
+}
+
+.delete-button:hover {
+  background-color: rgb(51, 13, 13);
+}
+
+.userItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto; 
+  max-width: 20vmax; 
+  margin-top: 10px;
+  font-size: 20px;
+}
