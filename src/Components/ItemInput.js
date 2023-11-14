@@ -29,13 +29,20 @@ class ItemInput extends Component {
     }
   }
 
-  handleDelete = (index) => {
+  handleDelete = index => {
     const { userInputList } = this.state;
     const updatedUserInputList = [...userInputList];
     updatedUserInputList.splice(index, 1);
     this.setState({
       userInputList: updatedUserInputList,
     });
+  }
+
+  handleUpdate = (index, updatedText) => {
+    const updatedUserInputList = [...this.state.userInputList];
+    updatedUserInputList[index] = updatedText;
+
+    this.setState({ userInputList: updatedUserInputList });
   }
 
   render() {
@@ -48,7 +55,13 @@ class ItemInput extends Component {
 
         <div>
           {userInputList.map((userInput, index) => (
-            <RenderItem  key={index} index={index} userInput={userInput} onDelete={this.handleDelete}/>
+            <RenderItem
+              key={index}
+              uniqueKey={index}
+              userInput={userInput}
+              onDelete={() => this.handleDelete(index)}
+              onUpdate={updatedText => this.handleUpdate(index, updatedText)}
+            />
           ))}
         </div>
       </div>
