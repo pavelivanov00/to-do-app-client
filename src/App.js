@@ -1,12 +1,10 @@
 import './App.css';
-import ItemInput from './Components/ItemInput';
-import DayInfo from './Components/DayInfo';
+import InputItem from './Components/InputItem';
 
 function App() {
   return (
     <div className="App">
-        <DayInfo/>
-        <ItemInput/>
+        <InputItem/>
     </div>
   );
 }

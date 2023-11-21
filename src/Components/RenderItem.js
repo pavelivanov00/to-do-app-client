@@ -10,6 +10,7 @@ class RenderItem extends Component {
       updatedInput: this.props.userInput,
     };
   }
+  
   handleEdit = () => {
     this.setState({ isEditing: true });
   }

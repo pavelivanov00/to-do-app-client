@@ -1,3 +1,12 @@
 .userInput {
-    margin-bottom:15px;
+    margin-bottom:2vmax;
+}
+
+.saveButton {
+    margin-top:2vmax;
+}
+
+.dayInfo {
+    font-size: 24px;
+    margin-bottom:20px;
 }

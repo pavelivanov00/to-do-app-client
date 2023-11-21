@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import RenderItem from './RenderItem';
-import '../Css/InputItem.css'
+import '../Css/InputItem.css';
+import axios from 'axios';
 
-class ItemInput extends Component {
+class InputItem extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       userInput: '',
       userInputList: [],
+      chosenDay: new Date()
     };
   }
 
-  handleChange = (event) => {
+  handleChange = event => {
     this.setState({
       userInput: event.target.value,
     });
@@ -45,11 +47,35 @@ class ItemInput extends Component {
     this.setState({ userInputList: updatedUserInputList });
   }
 
+  handleSave = () => {
+    const { userInputList, chosenDay } = this.state;
+    
+    axios.post('http://localhost:5000/todos/save', { day: chosenDay, todos: userInputList})
+      .then(response => {
+        console.log('To-do items saved successfully:', response.data);
+      })
+      .catch(error => {
+        console.error('Error saving to-do items:', error);
+      });
+  };
+
   render() {
+    const { chosenDay } = this.state;
+    const day = chosenDay.getDate();
+    const month = chosenDay.getMonth();
+
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const monthName = monthNames[month];
+
     const { userInput, userInputList } = this.state;
 
     return (
       <div>
+        <div className='dayInfo'>Chosen day: {day} {monthName}</div>
+        
         <input type="text" className='userInput' value={userInput} onChange={this.handleChange} />
         <button onClick={this.clickHandler}>Input</button>
 
@@ -64,9 +90,11 @@ class ItemInput extends Component {
             />
           ))}
         </div>
+
+        <button onClick={this.handleSave} className='saveButton'>Save</button>
       </div>
     );
   }
 }
 
-export default ItemInput;
+export default InputItem;
