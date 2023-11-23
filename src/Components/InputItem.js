@@ -14,6 +14,10 @@ class InputItem extends Component {
     };
   }
 
+  componentDidMount() {
+    this.fetchTodosForCurrentDay();
+  }
+
   handleChange = event => {
     this.setState({
       userInput: event.target.value,
@@ -49,14 +53,36 @@ class InputItem extends Component {
 
   handleSave = () => {
     const { userInputList, chosenDay } = this.state;
-    
-    axios.post('http://localhost:5000/todos/save', { day: chosenDay, todos: userInputList})
+
+    axios.post('http://localhost:5000/todos/save', { day: chosenDay, todos: userInputList })
       .then(response => {
         console.log('To-do items saved successfully:', response.data);
       })
       .catch(error => {
         console.error('Error saving to-do items:', error);
       });
+  };
+
+  fetchTodosForCurrentDay = async () => {
+    try {
+      const { chosenDay } = this.state;
+      
+      const response = await axios.get('http://localhost:5000/todos', {
+        params: {
+          chosenDay: chosenDay.toISOString()
+        },
+      });
+
+      console.log('To-do items fetched successfully:', response.data);
+
+      const queriedTodos = response.data.map(item => item.todos).flat();
+      this.setState({
+        userInputList: queriedTodos,
+      });
+      
+    } catch (error) {
+      console.error('Error fetching to-do items:', error);
+    }
   };
 
   render() {
@@ -75,7 +101,7 @@ class InputItem extends Component {
     return (
       <div>
         <div className='dayInfo'>Chosen day: {day} {monthName}</div>
-        
+
         <input type="text" className='userInput' value={userInput} onChange={this.handleChange} />
         <button onClick={this.clickHandler}>Input</button>
 
