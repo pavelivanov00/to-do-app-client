@@ -8,80 +8,80 @@ class InputItem extends Component {
     super(props);
 
     this.state = {
-      userInput: '',
-      userInputList: [],
+      task: '',
+      taskList: [],
       chosenDay: new Date()
     };
   }
 
   componentDidMount() {
-    this.fetchTodosForCurrentDay();
+    this.fetchTodosForChosenDay();
   }
 
   handleChange = event => {
     this.setState({
-      userInput: event.target.value,
+      task: event.target.value,
     });
   }
 
   clickHandler = () => {
-    const { userInput, userInputList } = this.state;
+    const { task, taskList } = this.state;
 
-    if (userInput.trim() !== '' && userInput.length !== 0) {
+    if (task.trim() !== '' && task.length !== 0) {
       this.setState({
-        userInputList: [...userInputList, userInput],
-        userInput: '',
+        taskList: [...taskList, task],
+        task: '',
       });
     }
   }
 
   handleDelete = index => {
-    const { userInputList } = this.state;
-    const updatedUserInputList = [...userInputList];
-    updatedUserInputList.splice(index, 1);
+    const { taskList } = this.state;
+    const updatedTaskList = [...taskList];
+    updatedTaskList.splice(index, 1);
     this.setState({
-      userInputList: updatedUserInputList,
+      taskList: updatedTaskList,
     });
   }
 
-  handleUpdate = (index, updatedText) => {
-    const updatedUserInputList = [...this.state.userInputList];
-    updatedUserInputList[index] = updatedText;
+  handleUpdate = (index, updatedTask) => {
+    const updatedTaskList = [...this.state.taskList];
+    updatedTaskList[index] = updatedTask;
 
-    this.setState({ userInputList: updatedUserInputList });
+    this.setState({ taskList: updatedTaskList });
   }
 
   handleSave = () => {
-    const { userInputList, chosenDay } = this.state;
+    const { taskList, chosenDay } = this.state;
 
-    axios.post('http://localhost:5000/todos/save', { day: chosenDay, todos: userInputList })
+    axios.post('http://localhost:5000/tasks/save', { chosenDay: chosenDay.toISOString(), taskList: taskList })
       .then(response => {
-        console.log('To-do items saved successfully:', response.data);
+        console.log('Tasks saved successfully:', response.data);
       })
       .catch(error => {
-        console.error('Error saving to-do items:', error);
+        console.error('Error when saving tasks:', error);
       });
   };
 
-  fetchTodosForCurrentDay = async () => {
+  fetchTodosForChosenDay = async () => {
     try {
       const { chosenDay } = this.state;
       
-      const response = await axios.get('http://localhost:5000/todos', {
+      const response = await axios.get('http://localhost:5000/tasks', {
         params: {
           chosenDay: chosenDay.toISOString()
         },
       });
 
-      console.log('To-do items fetched successfully:', response.data);
+      console.log('Tasks fetched successfully:', response.data);
 
-      const queriedTodos = response.data.map(item => item.todos).flat();
+      const queriedTasks = response.data.map(result => result.tasks).flat();
       this.setState({
-        userInputList: queriedTodos,
+        taskList: queriedTasks
       });
       
     } catch (error) {
-      console.error('Error fetching to-do items:', error);
+      console.error('Error when fetching tasks:', error);
     }
   };
 
@@ -96,23 +96,23 @@ class InputItem extends Component {
     ];
     const monthName = monthNames[month];
 
-    const { userInput, userInputList } = this.state;
+    const { task, taskList} = this.state;
 
     return (
       <div>
         <div className='dayInfo'>Chosen day: {day} {monthName}</div>
 
-        <input type="text" className='userInput' value={userInput} onChange={this.handleChange} />
-        <button onClick={this.clickHandler}>Input</button>
+        <input type="text" className='userInput' value={task} onChange={this.handleChange} />
+        <button onClick={this.clickHandler}>Add task</button>
 
         <div>
-          {userInputList.map((userInput, index) => (
+          {taskList.map((task, index) => (
             <RenderItem
               key={index}
               uniqueKey={index}
-              userInput={userInput}
+              task={task}
               onDelete={() => this.handleDelete(index)}
-              onUpdate={updatedText => this.handleUpdate(index, updatedText)}
+              onUpdate={updatedTask => this.handleUpdate(index, updatedTask)}
             />
           ))}
         </div>

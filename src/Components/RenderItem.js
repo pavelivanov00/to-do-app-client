@@ -7,7 +7,7 @@ class RenderItem extends Component {
 
     this.state = {
       isEditing: false,
-      updatedInput: this.props.userInput,
+      updatedTask: this.props.task,
     };
   }
   
@@ -16,13 +16,15 @@ class RenderItem extends Component {
   }
 
   handleInputChange = event => {
-    this.setState({ updatedInput: event.target.value });
+    this.setState({ updatedTask: event.target.value });
   }
 
   handleUpdate = () => {
-    const { updatedInput } = this.state;
+    const { updatedTask } = this.state;
     const { onUpdate } = this.props;
-    onUpdate(updatedInput);
+
+    onUpdate(updatedTask);
+
     this.setState({ 
       isEditing: false 
     });
@@ -30,12 +32,13 @@ class RenderItem extends Component {
   
   handleDelete = () => {
     const { uniqueKey, onDelete } = this.props;
+    
     onDelete(uniqueKey);
   }
   
   render() {
     const { isEditing } = this.state;
-    const { userInput, onDelete } = this.props;
+    const { task, onDelete } = this.props;
 
     return (
       <div className='userItem'>
@@ -45,7 +48,7 @@ class RenderItem extends Component {
             onChange={this.handleInputChange}
           />
         ) : (
-          <p>{userInput}</p>
+          <p>{task}</p>
         )}
         {isEditing ? (
           <button
