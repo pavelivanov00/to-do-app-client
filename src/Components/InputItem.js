@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import RenderItem from './RenderItem';
+import DaysOfMonth from './DaysOfMonth';
+//import SelectDate from './SelectDate';
 import '../Css/InputItem.css';
 import axios from 'axios';
 
@@ -14,8 +16,17 @@ class InputItem extends Component {
     };
   }
 
+  handleDayClick = (day, callback) => {
+    this.setState({ chosenDay: day }, callback);
+    this.handleToggleDays();
+  };
+
+  handleToggleDays = () => {
+    this.setState(prevState => ({ showDays: !prevState.showDays }));
+  };
+
   componentDidMount() {
-    this.fetchTodosForChosenDay();
+    this.fetchTasksForChosenDay();
   }
 
   handleChange = event => {
@@ -31,6 +42,7 @@ class InputItem extends Component {
       this.setState({
         taskList: [...taskList, task],
         task: '',
+        showDays: false,
       });
     }
   }
@@ -63,10 +75,10 @@ class InputItem extends Component {
       });
   };
 
-  fetchTodosForChosenDay = async () => {
+  fetchTasksForChosenDay = async () => {
     try {
       const { chosenDay } = this.state;
-      
+
       const response = await axios.get('http://localhost:5000/tasks', {
         params: {
           chosenDay: chosenDay.toISOString()
@@ -79,7 +91,7 @@ class InputItem extends Component {
       this.setState({
         taskList: queriedTasks
       });
-      
+
     } catch (error) {
       console.error('Error when fetching tasks:', error);
     }
@@ -96,7 +108,7 @@ class InputItem extends Component {
     ];
     const monthName = monthNames[month];
 
-    const { task, taskList} = this.state;
+    const { task, taskList } = this.state;
 
     return (
       <div>
@@ -118,6 +130,19 @@ class InputItem extends Component {
         </div>
 
         <button onClick={this.handleSave} className='saveButton'>Save</button>
+
+        <button onClick={this.handleToggleDays}>Toggle Days</button>
+        {this.state.showDays && (
+          <div>
+            <DaysOfMonth
+              onDayClick={this.handleDayClick}
+              chosenDay={chosenDay}
+              fetchTasks={this.fetchTasksForChosenDay}
+            />
+            {chosenDay && <p>Tasks for {chosenDay.toDateString()}</p>}
+
+          </div>
+        )}
       </div>
     );
   }
