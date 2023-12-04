@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import RenderItem from './RenderItem';
 import DaysOfMonth from './DaysOfMonth';
-//import SelectDate from './SelectDate';
 import '../Css/InputItem.css';
 import axios from 'axios';
 
@@ -139,7 +138,6 @@ class InputItem extends Component {
               chosenDay={chosenDay}
               fetchTasks={this.fetchTasksForChosenDay}
             />
-            {chosenDay && <p>Tasks for {chosenDay.toDateString()}</p>}
 
           </div>
         )}
