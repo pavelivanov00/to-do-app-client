@@ -53,15 +53,15 @@ class RenderItem extends Component {
         {isEditing ? (
           <button
             onClick={this.handleUpdate} className='space'>
-            <img src='/edit.png' alt='edit.png' className='image-size'/>
+            <img src='/edit.png' alt='edit.png' className='-imageSize'/>
           </button>
         ) : (
           <button
             onClick={this.handleEdit} className='space'>
-            <img src='/edit.png' alt='edit.png' className='image-size'/>
+            <img src='/edit.png' alt='edit.png' className='imageSize'/>
           </button>
         )}
-        <button onClick={onDelete} className='delete-button space'>X</button>
+        <button onClick={onDelete} className='deleteButton space'>X</button>
       </div>
     )
   }

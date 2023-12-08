@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import RenderItem from './RenderItem';
-import DaysOfMonth from './DaysOfMonth';
+import ChangeDate from './ChangeDate'
 import '../Css/InputItem.css';
 import axios from 'axios';
+
 
 class InputItem extends Component {
   constructor(props) {
@@ -111,7 +112,7 @@ class InputItem extends Component {
 
     return (
       <div>
-        <div className='dayInfo'>Chosen day: {day} {monthName}</div>
+        <div className='dayInfo'>Chosen date: {day} {monthName}</div>
 
         <input type="text" className='userInput' value={task} onChange={this.handleChange} />
         <button onClick={this.clickHandler}>Add task</button>
@@ -130,10 +131,10 @@ class InputItem extends Component {
 
         <button onClick={this.handleSave} className='saveButton'>Save</button>
 
-        <button onClick={this.handleToggleDays}>Toggle Days</button>
+        <button onClick={this.handleToggleDays}>Choose date</button>
         {this.state.showDays && (
           <div>
-            <DaysOfMonth
+            <ChangeDate
               onDayClick={this.handleDayClick}
               chosenDay={chosenDay}
               fetchTasks={this.fetchTasksForChosenDay}

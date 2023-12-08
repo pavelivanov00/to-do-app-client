@@ -2,7 +2,7 @@
   margin-left:  15px;
 }
 
-.image-size {
+.imageSize {
   width: 30px; 
   height: 30px; 
 }
@@ -10,7 +10,7 @@
   outline: none;
 }
 
-.delete-button {
+.deleteButton {
   background-color: rgb(129, 25, 25);
   color: rgba(237, 221, 221, 0.989);
   border: none;
@@ -20,7 +20,7 @@
   cursor: pointer;
 }
 
-.delete-button:hover {
+.deleteButton:hover {
   background-color: rgb(51, 13, 13);
 }
 

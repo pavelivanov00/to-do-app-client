@@ -1,0 +1,10 @@
+.outernDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+}
+
+.padding {
+    padding: 1vh;
+}
