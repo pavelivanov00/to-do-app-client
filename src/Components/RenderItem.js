@@ -41,7 +41,7 @@ class RenderItem extends Component {
     const { task, onDelete } = this.props;
 
     return (
-      <div className='userItem'>
+      <div className='task'>
         {isEditing ? (
           <input
             type="text"
@@ -52,16 +52,16 @@ class RenderItem extends Component {
         )}
         {isEditing ? (
           <button
-            onClick={this.handleUpdate} className='space'>
-            <img src='/edit.png' alt='edit.png' className='-imageSize'/>
+            onClick={this.handleUpdate} className='editButton'>
+            <img src='/edit.png' alt='edit.png' className='imageSize'/>
           </button>
         ) : (
           <button
-            onClick={this.handleEdit} className='space'>
+            onClick={this.handleEdit} className='editButton'>
             <img src='/edit.png' alt='edit.png' className='imageSize'/>
           </button>
         )}
-        <button onClick={onDelete} className='deleteButton space'>X</button>
+        <button onClick={onDelete} className='deleteButton'>X</button>
       </div>
     )
   }

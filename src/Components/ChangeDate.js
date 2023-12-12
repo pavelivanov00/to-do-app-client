@@ -36,7 +36,7 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
           <thead>
             <tr>
               {weekdays.map(weekday => (
-                <th key={weekday} className='padding'>
+                <th key={weekday} className='weekday'>
                   {weekday}
                 </th>
               ))}
@@ -48,7 +48,9 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
                 {week.map((day, dayIndex) => (
                   <td key={dayIndex}>
                     {day !== null && (
-                      <button onClick={() => handleDayClick(day)}>{day}</button>
+                      <button
+                        className='dayButton'
+                        onClick={() => handleDayClick(day)}>{day}</button>
                     )}
                   </td>
                 ))}

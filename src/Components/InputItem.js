@@ -101,6 +101,7 @@ class InputItem extends Component {
     const { chosenDay } = this.state;
     const day = chosenDay.getDate();
     const month = chosenDay.getMonth();
+    const year = chosenDay.getFullYear();
 
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
@@ -112,10 +113,10 @@ class InputItem extends Component {
 
     return (
       <div>
-        <div className='dayInfo'>Chosen date: {day} {monthName}</div>
+        <div className='dateInfo'>Chosen date: {day} {monthName} {year}</div>
 
         <input type="text" className='userInput' value={task} onChange={this.handleChange} />
-        <button onClick={this.clickHandler}>Add task</button>
+        <button onClick={this.clickHandler} className='addTaskButton'>Add task</button>
 
         <div>
           {taskList.map((task, index) => (
@@ -130,8 +131,10 @@ class InputItem extends Component {
         </div>
 
         <button onClick={this.handleSave} className='saveButton'>Save</button>
+        <p>
+          <button onClick={this.handleToggleDays} className='changeDateButton'>Change date</button>
+        </p>
 
-        <button onClick={this.handleToggleDays}>Choose date</button>
         {this.state.showDays && (
           <div>
             <ChangeDate
@@ -139,7 +142,6 @@ class InputItem extends Component {
               chosenDay={chosenDay}
               fetchTasks={this.fetchTasksForChosenDay}
             />
-
           </div>
         )}
       </div>
