@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../Css/ChangeDate.css'
 
 const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
-  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const year = chosenDay.getFullYear();
-  const month = chosenDay.getMonth();
+  const getYear = chosenDay.getFullYear();
+  const [year, setYear] = useState(getYear);
+  const getMonth = chosenDay.getMonth();
+  const [month, setMonth] = useState(getMonth);
+
   const hours = chosenDay.getHours();
   const minutes = chosenDay.getMinutes();
   const seconds = chosenDay.getSeconds();
@@ -22,15 +24,75 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
   const weeks = chunkArray([...Array(firstDayOfMonth).fill(null), ...daysInMonth], 7);
 
   const handleDayClick = day => {
-    const clickedDate = new Date(year, month, day, hours, minutes, seconds);
-    onDayClick(clickedDate, () => {
-      fetchTasks(clickedDate);
+    const changedDate = new Date(year, month, day, hours, minutes, seconds);
+    onDayClick(changedDate, () => {
+      fetchTasks(changedDate);
     });
+  };
+
+  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const monthName = monthNames[month];
+
+  const prevMonth = () => {
+    if (month === 0) {
+      setYear(year - 1);
+      setMonth(11);
+    }
+    else setMonth(month - 1);
+  };
+
+  const nextMonth = () => {
+    if (month === 11) {
+      setYear(year + 1);
+      setMonth(0);
+    }
+    else setMonth(month + 1);
+  };
+
+  const prevYear = () => {
+    setYear(year - 1);
+  };
+
+  const nextYear = () => {
+    setYear(year + 1);
   };
 
   return (
     <div>
       <h2>Choose a new date</h2>
+      <button
+        className='changeYear'
+        onClick={prevYear}
+      >
+        {'<<'}
+      </button>
+      <button
+        className='changeMonth'
+        onClick={prevMonth}
+      >
+        {'<'}
+      </button>
+
+      <h2 className='date'>{monthName} {year}</h2>
+
+      <button
+        className='changeMonth'
+        onClick={nextMonth}
+      >
+        {'>'}
+      </button>
+      <button
+        className='changeYear'
+        onClick={nextYear}
+      >
+        {'>>'}
+      </button>
+
       <div className='outernDiv'>
         <table>
           <thead>
@@ -50,7 +112,8 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
                     {day !== null && (
                       <button
                         className='dayButton'
-                        onClick={() => handleDayClick(day)}>{day}</button>
+                        onClick={() => handleDayClick(day)}>{day}
+                      </button>
                     )}
                   </td>
                 ))}

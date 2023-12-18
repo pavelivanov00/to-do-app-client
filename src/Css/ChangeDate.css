@@ -1,3 +1,21 @@
+.date {
+    display: inline-block;
+    padding: 0px 10px 0px 10px;
+}
+
+.changeMonth,
+.changeYear {
+    background-color: #38963b;
+    cursor: pointer;
+    font-size: 30px;
+    border: none;
+    border-radius: 6px;
+    padding: 0px 10px 0px 10px;
+}
+.changeYear {
+    margin: 0px 10px 0px 10px;
+}
+
 .outernDiv {
     display: flex;
     justify-content: center;
@@ -13,9 +31,9 @@
 .dayButton {
     width: 70px;
     height: 40px;
-    background-color: #4caf50;
+    background-color: #38963b;
     border: none;
-    color: white;
+    color: rgb(255, 255, 255);
     text-align: center;
     display: inline-block;
     font-size: 22px;
@@ -24,6 +42,8 @@
     border-radius: 6px;
 }
 
+.changeMonth:hover,
+.changeYear:hover,
 .dayButton:hover {
-    background-color: #357d38;
+    background-color: #0e6a12;
 }
