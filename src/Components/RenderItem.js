@@ -8,9 +8,10 @@ class RenderItem extends Component {
     this.state = {
       isEditing: false,
       updatedTask: this.props.task,
+      isCompleted: false
     };
   }
-  
+
   handleEdit = () => {
     this.setState({ isEditing: true });
   }
@@ -25,23 +26,35 @@ class RenderItem extends Component {
 
     onUpdate(updatedTask);
 
-    this.setState({ 
-      isEditing: false 
+    this.setState({
+      isEditing: false
     });
   }
-  
+
   handleDelete = () => {
     const { uniqueKey, onDelete } = this.props;
-    
+
     onDelete(uniqueKey);
   }
-  
+
+  handleCheckboxChange = () => {
+    this.setState(prevState => ({
+      isCompleted: !prevState.isCompleted,
+    }));
+  }
+
   render() {
-    const { isEditing } = this.state;
+    const { isEditing, isCompleted } = this.state;
     const { task, onDelete } = this.props;
 
     return (
-      <div className='task'>
+      <div className={`task ${isCompleted ? 'checked' : ''}`}>
+        <input
+          type='checkbox'
+          checked={isCompleted}
+          onClick={this.handleCheckboxChange}
+          className='checkbox'
+        />
         {isEditing ? (
           <input
             type="text"
@@ -52,13 +65,24 @@ class RenderItem extends Component {
         )}
         {isEditing ? (
           <button
-            onClick={this.handleUpdate} className='editButton'>
-            <img src='/edit.png' alt='edit.png' className='imageSize'/>
+            onClick={this.handleUpdate}
+            className='editButton'
+          >
+            <img src='/edit.png'
+              alt='edit.png'
+              className='imageSize'
+            />
           </button>
         ) : (
           <button
-            onClick={this.handleEdit} className='editButton'>
-            <img src='/edit.png' alt='edit.png' className='imageSize'/>
+            onClick={this.handleEdit}
+            className='editButton'
+          >
+            <img
+              src='/edit.png'
+              alt='edit.png'
+              className='imageSize'
+            />
           </button>
         )}
         <button onClick={onDelete} className='deleteButton'>X</button>
