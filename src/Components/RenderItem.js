@@ -8,7 +8,7 @@ class RenderItem extends Component {
     this.state = {
       isEditing: false,
       updatedTask: this.props.task,
-      isCompleted: false
+      completedTasks: this.props.completedTasks
     };
   }
 
@@ -38,21 +38,27 @@ class RenderItem extends Component {
   }
 
   handleCheckboxChange = () => {
-    this.setState(prevState => ({
-      isCompleted: !prevState.isCompleted,
-    }));
+    const { uniqueKey, onCheckboxChange } = this.props;
+
+    onCheckboxChange(uniqueKey);
+  }
+
+  isTaskCompleted = () => {
+    const {uniqueKey, completedTasks} = this.props;
+    
+    return completedTasks && completedTasks[uniqueKey];
   }
 
   render() {
-    const { isEditing, isCompleted } = this.state;
-    const { task, onDelete } = this.props;
+    const { isEditing } = this.state;
+    const { task } = this.props;
 
     return (
-      <div className={`task ${isCompleted ? 'checked' : ''}`}>
+      <div className={`task ${this.isTaskCompleted() ? 'checked' : ''}`}>
         <input
           type='checkbox'
-          checked={isCompleted}
-          onClick={this.handleCheckboxChange}
+          checked={this.isTaskCompleted() || false}
+          onChange={this.handleCheckboxChange}
           className='checkbox'
         />
         {isEditing ? (
@@ -85,7 +91,7 @@ class RenderItem extends Component {
             />
           </button>
         )}
-        <button onClick={onDelete} className='deleteButton'>X</button>
+        <button onClick={this.handleDelete} className='deleteButton'>X</button>
       </div>
     )
   }

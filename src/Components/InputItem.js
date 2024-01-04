@@ -12,6 +12,7 @@ class InputItem extends Component {
     this.state = {
       task: '',
       taskList: [],
+      completedTasks: [],
       chosenDay: new Date()
     };
   }
@@ -19,6 +20,9 @@ class InputItem extends Component {
   handleDayClick = (day, callback) => {
     this.setState({ chosenDay: day }, callback);
     this.handleToggleDays();
+    this.setState({
+      completedTasks: []
+    })
   };
 
   handleToggleDays = () => {
@@ -48,12 +52,25 @@ class InputItem extends Component {
   }
 
   handleDelete = index => {
-    const { taskList } = this.state;
+    const { taskList, completedTasks } = this.state;
     const updatedTaskList = [...taskList];
+    const updatedCompletedTasks = [...completedTasks];
+
     updatedTaskList.splice(index, 1);
+    updatedCompletedTasks.splice(index, 1);
+
     this.setState({
       taskList: updatedTaskList,
+      completedTasks: updatedCompletedTasks,
     });
+  }
+
+  handleCheckboxChange = index => {
+    const list = [...this.state.completedTasks];
+    list[index] = !list[index];
+    this.setState(() => ({
+      completedTasks: list,
+    }), console.log(list));
   }
 
   handleUpdate = (index, updatedTask) => {
@@ -109,7 +126,7 @@ class InputItem extends Component {
     ];
     const monthName = monthNames[month];
 
-    const { task, taskList } = this.state;
+    const { task, taskList, completedTasks } = this.state;
 
     return (
       <div>
@@ -124,15 +141,25 @@ class InputItem extends Component {
               key={index}
               uniqueKey={index}
               task={task}
+              completedTasks={completedTasks}
+              onCheckboxChange={() => this.handleCheckboxChange(index)}
               onDelete={() => this.handleDelete(index)}
               onUpdate={updatedTask => this.handleUpdate(index, updatedTask)}
             />
           ))}
         </div>
 
-        <button onClick={this.handleSave} className='saveButton'>Save</button>
+        <button
+          onClick={this.handleSave}
+          className='saveButton'
+        >Save
+        </button>
         <p>
-          <button onClick={this.handleToggleDays} className='changeDateButton'>Change date</button>
+          <button
+            onClick={this.handleToggleDays}
+            className='changeDateButton'
+          >Change date
+          </button>
         </p>
 
         {this.state.showDays && (
