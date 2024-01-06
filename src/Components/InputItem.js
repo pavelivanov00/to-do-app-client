@@ -4,7 +4,6 @@ import ChangeDate from './ChangeDate'
 import '../Css/InputItem.css';
 import axios from 'axios';
 
-
 class InputItem extends Component {
   constructor(props) {
     super(props);
@@ -13,33 +12,45 @@ class InputItem extends Component {
       task: '',
       taskList: [],
       completedTasks: [],
-      chosenDay: new Date()
+      chosenDate: new Date()
     };
   }
 
-  handleDayClick = (day, callback) => {
-    this.setState({ chosenDay: day }, callback);
-    this.handleToggleDays();
-    this.setState({
-      completedTasks: []
-    })
-  };
-
-  handleToggleDays = () => {
-    this.setState(prevState => ({ showDays: !prevState.showDays }));
-  };
-
   componentDidMount() {
-    this.fetchTasksForChosenDay();
-  }
+    this.fetchTasksForChosenDate();
+  };
 
-  handleChange = event => {
-    this.setState({
-      task: event.target.value,
-    });
-  }
+  fetchTasksForChosenDate = async () => {
+    try {
+      const { chosenDate } = this.state;
 
-  clickHandler = () => {
+      const response = await axios.get('http://localhost:5000/tasks', {
+        params: {
+          chosenDate: chosenDate.toISOString()
+        },
+      });
+
+      console.log('Tasks fetched successfully:', response.data);
+
+      const queriedTasks = response.data[0]?.tasks || [];
+      const taskList = queriedTasks.map(task => task.description);
+      const completedTasks = queriedTasks.map(task => task.completed);
+
+      this.setState({
+        taskList: taskList,
+        completedTasks: completedTasks
+      });
+
+    } catch (error) {
+      console.error('Error when fetching tasks:', error);
+    }
+  };
+
+  handleInputChange = event => {
+    this.setState({ task: event.target.value });
+  };
+
+  handleAddTask = () => {
     const { task, taskList } = this.state;
 
     if (task.trim() !== '' && task.length !== 0) {
@@ -49,7 +60,35 @@ class InputItem extends Component {
         showDays: false,
       });
     }
-  }
+  };
+
+  handleSave = () => {
+    const { chosenDate, taskList, completedTasks } = this.state;
+
+    axios.post('http://localhost:5000/tasks/save', {
+      chosenDate: chosenDate.toISOString(),
+      taskList: taskList,
+      completedTasks: completedTasks
+    }).then(response => {
+      console.log('Tasks saved successfully:', response.data);
+    }).catch(error => {
+      console.error('Error when saving tasks:', error);
+    });
+  };
+
+  handleCheckboxChange = index => {
+    const updatedCompletedTasks = [...this.state.completedTasks];
+    updatedCompletedTasks[index] = !updatedCompletedTasks[index];
+
+    this.setState({ completedTasks: updatedCompletedTasks });
+  };
+
+  handleTaskUpdate = (index, updatedTask) => {
+    const updatedTaskList = [...this.state.taskList];
+    updatedTaskList[index] = updatedTask;
+
+    this.setState({ taskList: updatedTaskList });
+  };
 
   handleDelete = index => {
     const { taskList, completedTasks } = this.state;
@@ -63,62 +102,24 @@ class InputItem extends Component {
       taskList: updatedTaskList,
       completedTasks: updatedCompletedTasks,
     });
-  }
-
-  handleCheckboxChange = index => {
-    const list = [...this.state.completedTasks];
-    list[index] = !list[index];
-    this.setState(() => ({
-      completedTasks: list,
-    }), console.log(list));
-  }
-
-  handleUpdate = (index, updatedTask) => {
-    const updatedTaskList = [...this.state.taskList];
-    updatedTaskList[index] = updatedTask;
-
-    this.setState({ taskList: updatedTaskList });
-  }
-
-  handleSave = () => {
-    const { taskList, chosenDay } = this.state;
-
-    axios.post('http://localhost:5000/tasks/save', { chosenDay: chosenDay.toISOString(), taskList: taskList })
-      .then(response => {
-        console.log('Tasks saved successfully:', response.data);
-      })
-      .catch(error => {
-        console.error('Error when saving tasks:', error);
-      });
   };
 
-  fetchTasksForChosenDay = async () => {
-    try {
-      const { chosenDay } = this.state;
+  handleToggleDays = () => {
+    this.setState(prevState => ({ showDays: !prevState.showDays }));
+  };
 
-      const response = await axios.get('http://localhost:5000/tasks', {
-        params: {
-          chosenDay: chosenDay.toISOString()
-        },
-      });
+  handleDayClick = (day, callback) => {
+    this.setState({ chosenDate: day }, callback);
+    this.handleToggleDays();
 
-      console.log('Tasks fetched successfully:', response.data);
-
-      const queriedTasks = response.data.map(result => result.tasks).flat();
-      this.setState({
-        taskList: queriedTasks
-      });
-
-    } catch (error) {
-      console.error('Error when fetching tasks:', error);
-    }
+    this.setState({ completedTasks: [] })
   };
 
   render() {
-    const { chosenDay } = this.state;
-    const day = chosenDay.getDate();
-    const month = chosenDay.getMonth();
-    const year = chosenDay.getFullYear();
+    const { chosenDate } = this.state;
+    const day = chosenDate.getDate();
+    const month = chosenDate.getMonth();
+    const year = chosenDate.getFullYear();
 
     const monthNames = [
       "January", "February", "March", "April", "May", "June",
@@ -132,8 +133,17 @@ class InputItem extends Component {
       <div>
         <div className='dateInfo'>Chosen date: {day} {monthName} {year}</div>
 
-        <input type="text" className='userInput' value={task} onChange={this.handleChange} />
-        <button onClick={this.clickHandler} className='addTaskButton'>Add task</button>
+        <input
+          type="text"
+          className='userInput'
+          value={task}
+          onChange={this.handleInputChange}
+        />
+        <button
+          onClick={this.handleAddTask}
+          className='addTaskButton'>
+          Add task
+        </button>
 
         <div>
           {taskList.map((task, index) => (
@@ -166,8 +176,8 @@ class InputItem extends Component {
           <div>
             <ChangeDate
               onDayClick={this.handleDayClick}
-              chosenDay={chosenDay}
-              fetchTasks={this.fetchTasksForChosenDay}
+              chosenDate={chosenDate}
+              fetchTasks={this.fetchTasksForChosenDate}
             />
           </div>
         )}

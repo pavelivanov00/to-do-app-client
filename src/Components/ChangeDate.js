@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import '../Css/ChangeDate.css'
 
-const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
-  const getYear = chosenDay.getFullYear();
+const ChangeDate = ({ chosenDate, onDayClick, fetchTasks }) => {
+  const getYear = chosenDate.getFullYear();
   const [year, setYear] = useState(getYear);
-  const getMonth = chosenDay.getMonth();
+  const getMonth = chosenDate.getMonth();
   const [month, setMonth] = useState(getMonth);
 
-  const hours = chosenDay.getHours();
-  const minutes = chosenDay.getMinutes();
-  const seconds = chosenDay.getSeconds();
+  const hours = chosenDate.getHours();
+  const minutes = chosenDate.getMinutes();
+  const seconds = chosenDate.getSeconds();
 
   const daysInMonth = Array.from(
     { length: new Date(year, month + 1, 0).getDate() },
@@ -54,20 +54,12 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
     else setMonth(month + 1);
   };
 
-  const prevYear = () => {
-    setYear(year - 1);
-  };
-
-  const nextYear = () => {
-    setYear(year + 1);
-  };
-
   return (
     <div>
       <h2>Choose a new date</h2>
       <button
         className='changeYear'
-        onClick={prevYear}
+        onClick={() => setYear(year - 1)}
       >
         {'<<'}
       </button>
@@ -88,7 +80,7 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
       </button>
       <button
         className='changeYear'
-        onClick={nextYear}
+        onClick={() => setYear(year + 1)}
       >
         {'>>'}
       </button>
@@ -112,7 +104,8 @@ const ChangeDate = ({ chosenDay, onDayClick, fetchTasks }) => {
                     {day !== null && (
                       <button
                         className='dayButton'
-                        onClick={() => handleDayClick(day)}>{day}
+                        onClick={() => handleDayClick(day)}>
+                        {day}
                       </button>
                     )}
                   </td>

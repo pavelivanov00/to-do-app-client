@@ -26,9 +26,7 @@ class RenderItem extends Component {
 
     onUpdate(updatedTask);
 
-    this.setState({
-      isEditing: false
-    });
+    this.setState({ isEditing: false });
   }
 
   handleDelete = () => {
@@ -44,8 +42,8 @@ class RenderItem extends Component {
   }
 
   isTaskCompleted = () => {
-    const {uniqueKey, completedTasks} = this.props;
-    
+    const { uniqueKey, completedTasks } = this.props;
+
     return completedTasks && completedTasks[uniqueKey];
   }
 
